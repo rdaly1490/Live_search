@@ -15,13 +15,21 @@ function findMatches(wordToMatch, citiesArray) {
 	});
 }
 
+function formatNumberWithCommas(number) {
+	return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 function displayMatches() {
 	const matchArray = findMatches(this.value, cities);
 	const html = matchArray.map(place => {
+		const regex = new RegExp(this.value, 'gi');
+		// allows us to highlight current input value in search results
+		const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+		const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
 		return `
 			<li>
-				<span class="name">${place.city}, ${place.state}</span>
-				<span class="population">${place.population}</span>
+				<span class="name">${cityName}, ${stateName}</span>
+				<span class="population">${formatNumberWithCommas(place.population)}</span>
 			</li>
 		`;
 	}).join('');
